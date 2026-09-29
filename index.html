@@ -48,7 +48,7 @@ Sub&iacute; las fotos que saques durante nuestra boda y ayudanos a crear este &a
 <input id="cameraInput" type="file" accept="image/*" capture="environment">
 <input id="galleryInput" type="file" accept="image/*" multiple>
 
-<div class="hint">Prueba piloto: por ahora las fotos se muestran solo en este navegador.</div>
+<div class="hint"> 📸 ¡Gracias por compartir tus fotos! Todas quedarán guardadas en nuestro álbum de recuerdos..</div>
 <div id="gallery" class="gallery"><div class="empty">Todav&iacute;a no hay fotos. &iexcl;Sub&iacute; las primeras! &#128154;</div></div>
 </main>
 
@@ -68,7 +68,7 @@ let photos = [];
 
 uploadButton.onclick = () => choices.classList.toggle('show');
 
-cameraButton.onclick = () => cameraInput.click();
+c = () => cameraInput.click();
 galleryButton.onclick = () => galleryInput.click();
 
 async function addFiles(fileList) {
