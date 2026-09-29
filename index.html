@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delfina & Axel - Fotos</title>
+<title>Delfina &amp; Axel - Fotos</title>
 <style>
 :root{--olive:#596044;--cream:#f4efe5;--ink:#303329;--muted:#77786f}
 *{box-sizing:border-box}
@@ -32,24 +32,24 @@ input{position:absolute;width:1px;height:1px;opacity:0}
 <body>
 <main>
 <section class="hero">
-<div class="small">Nuestro gran dÃ­a</div>
+<div class="small">Nuestro gran d&iacute;a</div>
 <h1>Delfina &amp; Axel</h1>
-<div class="date">28 Â· 11 Â· 2026</div>
+<div class="date">28 &middot; 11 &middot; 2026</div>
 </section>
-<p class="intro">ðŸ“¸ <strong>Â¡Queremos guardar cada momento!</strong><br>
-SubÃ­ las fotos que saques durante nuestra boda y ayudanos a crear este Ã¡lbum de recuerdos.</p>
+<p class="intro">&#128247; <strong>&iexcl;Queremos guardar cada momento!</strong><br>
+Sub&iacute; las fotos que saques durante nuestra boda y ayudanos a crear este &aacute;lbum de recuerdos.</p>
 
-<button id="uploadButton" class="upload" type="button">ï¼‹ Subir mis fotos</button>
+<button id="uploadButton" class="upload" type="button">&#65291; Subir mis fotos</button>
 <div id="choices" class="choices">
-  <button id="cameraButton" class="choice primary" type="button">ðŸ“¸ Sacar una foto</button>
-  <button id="galleryButton" class="choice" type="button">ðŸ–¼ï¸ Elegir de la galerÃ­a</button>
+  <button id="cameraButton" class="choice primary" type="button">&#128247; Sacar una foto</button>
+  <button id="galleryButton" class="choice" type="button">&#128444;&#65039; Elegir de la galer&iacute;a</button>
 </div>
 
 <input id="cameraInput" type="file" accept="image/*" capture="environment">
 <input id="galleryInput" type="file" accept="image/*" multiple>
 
 <div class="hint">Prueba piloto: por ahora las fotos se muestran solo en este navegador.</div>
-<div id="gallery" class="gallery"><div class="empty">TodavÃ­a no hay fotos. Â¡SubÃ­ las primeras! ðŸ’š</div></div>
+<div id="gallery" class="gallery"><div class="empty">Todav&iacute;a no hay fotos. &iexcl;Sub&iacute; las primeras! &#128154;</div></div>
 </main>
 
 <script>
@@ -74,13 +74,13 @@ function addFiles(fileList){
 function render(){
  gallery.innerHTML='';
  if(!photos.length){
-  gallery.innerHTML='<div class="empty">TodavÃ­a no hay fotos. Â¡SubÃ­ las primeras! ðŸ’š</div>';
+  gallery.innerHTML='<div class="empty">Todav&iacute;a no hay fotos. &iexcl;Sub&iacute; las primeras! &#128154;</div>';
   return;
  }
  photos.forEach((url,i)=>{
   const card=document.createElement('div'); card.className='card';
   const img=document.createElement('img'); img.src=url; img.alt='Foto compartida';
-  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='Ã—'; btn.setAttribute('aria-label','Eliminar foto');
+  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='&times;'; btn.setAttribute('aria-label','Eliminar foto');
   btn.onclick=()=>{URL.revokeObjectURL(photos[i]);photos.splice(i,1);render()};
   card.append(img,btn);
   gallery.append(card);
