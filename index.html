@@ -53,42 +53,93 @@ Sub&iacute; las fotos que saques durante nuestra boda y ayudanos a crear este &a
 </main>
 
 <script>
-const uploadButton=document.getElementById('uploadButton');
-const choices=document.getElementById('choices');
-const cameraButton=document.getElementById('cameraButton');
-const galleryButton=document.getElementById('galleryButton');
-const cameraInput=document.getElementById('cameraInput');
-const galleryInput=document.getElementById('galleryInput');
-const gallery=document.getElementById('gallery');
-let photos=[];
+const SUPABASE_URL = 'https://trjeiuatbjqkbzqzryxc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRyamVpdWF0Ympxa2J6cXpyeXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA3MTYzNDgsImV4cCI6MjEwNjI5MjM0OH0.6ERyUgkb3re6oNdutZghqh1sxlT6fdaM2Ki_s6SV3ZI';
 
-uploadButton.onclick=()=>choices.classList.toggle('show');
-cameraButton.onclick=()=>cameraInput.click();
-galleryButton.onclick=()=>galleryInput.click();
+const uploadButton = document.getElementById('uploadButton');
+const choices = document.getElementById('choices');
+const cameraButton = document.getElementById('cameraButton');
+const galleryButton = document.getElementById('galleryButton');
+const cameraInput = document.getElementById('cameraInput');
+const galleryInput = document.getElementById('galleryInput');
+const gallery = document.getElementById('gallery');
 
-function addFiles(fileList){
- [...fileList].filter(f=>f.type.startsWith('image/')).forEach(f=>photos.push(URL.createObjectURL(f)));
- render();
+let photos = [];
+
+uploadButton.onclick = () => choices.classList.toggle('show');
+
+cameraButton.onclick = () => cameraInput.click();
+galleryButton.onclick = () => galleryInput.click();
+
+async function addFiles(fileList) {
+  const files = [...fileList].filter(f => f.type.startsWith('image/'));
+
+  for (const file of files) {
+    const fileName =
+      `${Date.now()}-${Math.random().toString(36).slice(2)}-${file.name}`;
+
+    const response = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/fotos-boda/${encodeURIComponent(fileName)}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'apikey': SUPABASE_KEY,
+          'Content-Type': file.type,
+          'x-upsert': 'false'
+        },
+        body: file
+      }
+    );
+
+    if (!response.ok) {
+      alert('No se pudo subir una de las fotos.');
+      console.error(await response.text());
+      continue;
+    }
+
+    const publicUrl =
+      `${SUPABASE_URL}/storage/v1/object/public/fotos-boda/${encodeURIComponent(fileName)}`;
+
+    photos.push(publicUrl);
+  }
+
+  render();
 }
 
-function render(){
- gallery.innerHTML='';
- if(!photos.length){
-  gallery.innerHTML='<div class="empty">Todav&iacute;a no hay fotos. &iexcl;Sub&iacute; las primeras! &#128154;</div>';
-  return;
- }
- photos.forEach((url,i)=>{
-  const card=document.createElement('div'); card.className='card';
-  const img=document.createElement('img'); img.src=url; img.alt='Foto compartida';
-  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='&times;'; btn.setAttribute('aria-label','Eliminar foto');
-  btn.onclick=()=>{URL.revokeObjectURL(photos[i]);photos.splice(i,1);render()};
-  card.append(img,btn);
-  gallery.append(card);
- });
+function render() {
+  gallery.innerHTML = '';
+
+  if (!photos.length) {
+    gallery.innerHTML =
+      '<div class="empty">Todavía no hay fotos. ¡Subí las primeras! 💚</div>';
+    return;
+  }
+
+  photos.forEach((url) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = 'Foto compartida';
+
+    card.append(img);
+    gallery.append(card);
+  });
 }
 
-cameraInput.onchange=e=>{addFiles(e.target.files);cameraInput.value='';choices.classList.remove('show');};
-galleryInput.onchange=e=>{addFiles(e.target.files);galleryInput.value='';choices.classList.remove('show');};
+cameraInput.onchange = e => {
+  addFiles(e.target.files);
+  cameraInput.value = '';
+  choices.classList.remove('show');
+};
+
+galleryInput.onchange = e => {
+  addFiles(e.target.files);
+  galleryInput.value = '';
+  choices.classList.remove('show');
+};
 </script>
 </body>
 </html>
