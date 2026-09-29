@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delfina & Axel — Fotos</title>
+<style>
+:root{--olive:#596044;--cream:#f4efe5;--ink:#303329;--muted:#77786f}
+*{box-sizing:border-box}
+body{margin:0;background:#fffaf2;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+main{max-width:680px;margin:auto;padding:22px 16px 40px}
+.hero{background:var(--olive);color:#fff;border-radius:24px;padding:38px 20px;text-align:center}
+.small{font:11px Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase;opacity:.85}
+h1{font-size:36px;font-weight:400;margin:12px 0 6px}
+.date{font-size:15px;letter-spacing:.16em}
+.intro{text-align:center;font-size:17px;line-height:1.55;margin:24px 8px}
+.upload{display:block;width:max-content;max-width:100%;margin:0 auto;padding:14px 24px;border-radius:999px;background:var(--olive);color:#fff;font:600 15px Arial,sans-serif;cursor:pointer}
+input{position:absolute;width:1px;height:1px;opacity:0}
+.hint{text-align:center;color:var(--muted);font:12px Arial,sans-serif;margin-top:9px}
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px}
+.card{position:relative;aspect-ratio:1;overflow:hidden;border-radius:14px;background:var(--cream)}
+.card img{width:100%;height:100%;object-fit:cover}
+.remove{position:absolute;right:7px;top:7px;width:32px;height:32px;border:0;border-radius:50%;background:#000a;color:#fff;font:18px Arial;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;padding:28px 16px;border-radius:16px;background:var(--cream);font:14px Arial,sans-serif;color:var(--muted)}
+@media(min-width:560px){.gallery{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<main>
+<section class="hero">
+<div class="small">Nuestro gran día</div>
+<h1>Delfina &amp; Axel</h1>
+<div class="date">28 · 11 · 2026</div>
+</section>
+<p class="intro">📸 <strong>¡Queremos guardar cada momento!</strong><br>
+Subí las fotos que saques durante nuestra boda y ayudanos a crear este álbum de recuerdos.</p>
+<label class="upload" for="photos">＋ Subir mis fotos</label>
+<input id="photos" type="file" accept="image/*" multiple>
+<div class="hint">Esta es una prueba piloto: las fotos se muestran solo en este navegador.</div>
+<div id="gallery" class="gallery"><div class="empty">Todavía no hay fotos. ¡Subí las primeras! 💚</div></div>
+</main>
+<script>
+const input=document.getElementById('photos'), gallery=document.getElementById('gallery');
+let photos=[];
+function render(){
+ gallery.innerHTML='';
+ if(!photos.length){gallery.innerHTML='<div class="empty">Todavía no hay fotos. ¡Subí las primeras! 💚</div>';return;}
+ photos.forEach((url,i)=>{
+  const card=document.createElement('div'); card.className='card';
+  const img=document.createElement('img'); img.src=url; img.alt='Foto compartida';
+  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='×'; btn.setAttribute('aria-label','Eliminar foto');
+  btn.onclick=()=>{URL.revokeObjectURL(photos[i]);photos.splice(i,1);render()};
+  card.append(img,btn);gallery.append(card);
+ });
+}
+input.onchange=e=>{[...e.target.files].filter(f=>f.type.startsWith('image/')).forEach(f=>photos.push(URL.createObjectURL(f)));render();input.value='';};
+</script>
+</body>
+</html>
