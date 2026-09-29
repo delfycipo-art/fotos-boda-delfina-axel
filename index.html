@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Delfina & Axel — Fotos</title>
+<title>Delfina & Axel - Fotos</title>
 <style>
 :root{--olive:#596044;--cream:#f4efe5;--ink:#303329;--muted:#77786f}
 *{box-sizing:border-box}
@@ -14,7 +14,7 @@ main{max-width:680px;margin:auto;padding:22px 16px 40px}
 h1{font-size:36px;font-weight:400;margin:12px 0 6px}
 .date{font-size:15px;letter-spacing:.16em}
 .intro{text-align:center;font-size:17px;line-height:1.55;margin:24px 8px}
-.upload{display:block;width:max-content;max-width:100%;margin:0 auto;padding:14px 24px;border-radius:999px;background:var(--olive);color:#fff;font:600 15px Arial,sans-serif;cursor:pointer}
+.upload{display:block;width:max-content;max-width:100%;margin:0 auto;padding:14px 24px;border-radius:999px;background:var(--olive);color:#fff;font:600 15px Arial,sans-serif;cursor:pointer;border:0}
 input{position:absolute;width:1px;height:1px;opacity:0}
 .hint{text-align:center;color:var(--muted);font:12px Arial,sans-serif;margin-top:9px}
 .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px}
@@ -22,38 +22,73 @@ input{position:absolute;width:1px;height:1px;opacity:0}
 .card img{width:100%;height:100%;object-fit:cover}
 .remove{position:absolute;right:7px;top:7px;width:32px;height:32px;border:0;border-radius:50%;background:#000a;color:#fff;font:18px Arial;cursor:pointer}
 .empty{grid-column:1/-1;text-align:center;padding:28px 16px;border-radius:16px;background:var(--cream);font:14px Arial,sans-serif;color:var(--muted)}
+.choices{display:none;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px auto 0}
+.choice{border:0;border-radius:999px;padding:12px 18px;background:var(--cream);color:var(--ink);font:600 14px Arial,sans-serif;cursor:pointer}
+.choice.primary{background:var(--olive);color:#fff}
+.choices.show{display:flex}
 @media(min-width:560px){.gallery{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 <body>
 <main>
 <section class="hero">
-<div class="small">Nuestro gran día</div>
+<div class="small">Nuestro gran dÃ­a</div>
 <h1>Delfina &amp; Axel</h1>
-<div class="date">28 · 11 · 2026</div>
+<div class="date">28 Â· 11 Â· 2026</div>
 </section>
-<p class="intro">📸 <strong>¡Queremos guardar cada momento!</strong><br>
-Subí las fotos que saques durante nuestra boda y ayudanos a crear este álbum de recuerdos.</p>
-<label class="upload" for="photos">＋ Subir mis fotos</label>
-<input id="photos" type="file" accept="image/*" multiple>
-<div class="hint">Esta es una prueba piloto: las fotos se muestran solo en este navegador.</div>
-<div id="gallery" class="gallery"><div class="empty">Todavía no hay fotos. ¡Subí las primeras! 💚</div></div>
+<p class="intro">ðŸ“¸ <strong>Â¡Queremos guardar cada momento!</strong><br>
+SubÃ­ las fotos que saques durante nuestra boda y ayudanos a crear este Ã¡lbum de recuerdos.</p>
+
+<button id="uploadButton" class="upload" type="button">ï¼‹ Subir mis fotos</button>
+<div id="choices" class="choices">
+  <button id="cameraButton" class="choice primary" type="button">ðŸ“¸ Sacar una foto</button>
+  <button id="galleryButton" class="choice" type="button">ðŸ–¼ï¸ Elegir de la galerÃ­a</button>
+</div>
+
+<input id="cameraInput" type="file" accept="image/*" capture="environment">
+<input id="galleryInput" type="file" accept="image/*" multiple>
+
+<div class="hint">Prueba piloto: por ahora las fotos se muestran solo en este navegador.</div>
+<div id="gallery" class="gallery"><div class="empty">TodavÃ­a no hay fotos. Â¡SubÃ­ las primeras! ðŸ’š</div></div>
 </main>
+
 <script>
-const input=document.getElementById('photos'), gallery=document.getElementById('gallery');
+const uploadButton=document.getElementById('uploadButton');
+const choices=document.getElementById('choices');
+const cameraButton=document.getElementById('cameraButton');
+const galleryButton=document.getElementById('galleryButton');
+const cameraInput=document.getElementById('cameraInput');
+const galleryInput=document.getElementById('galleryInput');
+const gallery=document.getElementById('gallery');
 let photos=[];
+
+uploadButton.onclick=()=>choices.classList.toggle('show');
+cameraButton.onclick=()=>cameraInput.click();
+galleryButton.onclick=()=>galleryInput.click();
+
+function addFiles(fileList){
+ [...fileList].filter(f=>f.type.startsWith('image/')).forEach(f=>photos.push(URL.createObjectURL(f)));
+ render();
+}
+
 function render(){
  gallery.innerHTML='';
- if(!photos.length){gallery.innerHTML='<div class="empty">Todavía no hay fotos. ¡Subí las primeras! 💚</div>';return;}
+ if(!photos.length){
+  gallery.innerHTML='<div class="empty">TodavÃ­a no hay fotos. Â¡SubÃ­ las primeras! ðŸ’š</div>';
+  return;
+ }
  photos.forEach((url,i)=>{
   const card=document.createElement('div'); card.className='card';
   const img=document.createElement('img'); img.src=url; img.alt='Foto compartida';
-  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='×'; btn.setAttribute('aria-label','Eliminar foto');
+  const btn=document.createElement('button'); btn.className='remove'; btn.type='button'; btn.textContent='Ã—'; btn.setAttribute('aria-label','Eliminar foto');
   btn.onclick=()=>{URL.revokeObjectURL(photos[i]);photos.splice(i,1);render()};
-  card.append(img,btn);gallery.append(card);
+  card.append(img,btn);
+  gallery.append(card);
  });
 }
-input.onchange=e=>{[...e.target.files].filter(f=>f.type.startsWith('image/')).forEach(f=>photos.push(URL.createObjectURL(f)));render();input.value='';};
+
+cameraInput.onchange=e=>{addFiles(e.target.files);cameraInput.value='';choices.classList.remove('show');};
+galleryInput.onchange=e=>{addFiles(e.target.files);galleryInput.value='';choices.classList.remove('show');};
 </script>
 </body>
 </html>
